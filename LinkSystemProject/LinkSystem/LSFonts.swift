@@ -22,5 +22,10 @@ import UIKit
  - 10 : "AvenirNext-Bold"
  - 11 : "AvenirNext-UltraLight"
  */
-let LSFontPageHeading = UIFont(name: "AvenirNext-Bold", size: 53)
-let LSFontSectionHeading = UIFont(name: "AvenirNext-DemiBold", size: 39)
+enum LSFonts {
+    static let PageHeading = UIFont(name: "AvenirNext-Bold", size: 53)!
+    static let SectionHeadingBig = UIFont(name: "AvenirNext-DemiBold", size: 39)!
+    static let SectionHeadingMedium = UIFont(name: "AvenirNext-DemiBold", size: 32)!
+    static let ParagraphTitleBig = UIFont(name: "AvenirNext-Medium", size: 26)!
+}
+

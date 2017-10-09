@@ -12,6 +12,10 @@
 		4315F7031F82AA4C00360B15 /* LinkSystem.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4315F7011F82AA4C00360B15 /* LinkSystem.xcdatamodeld */; };
 		4315F7051F82AA4C00360B15 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4315F7041F82AA4C00360B15 /* Assets.xcassets */; };
 		4315F7081F82AA4C00360B15 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4315F7061F82AA4C00360B15 /* LaunchScreen.storyboard */; };
+		437A742B1F8B5A15003BEBD8 /* LSSquareBulletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A742A1F8B5A15003BEBD8 /* LSSquareBulletView.swift */; };
+		437A742D1F8B5AE8003BEBD8 /* LSColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A742C1F8B5AE8003BEBD8 /* LSColors.swift */; };
+		437A742F1F8B7070003BEBD8 /* LSLinkStartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A742E1F8B7070003BEBD8 /* LSLinkStartViewController.swift */; };
+		437A74311F8B714E003BEBD8 /* LSConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A74301F8B714E003BEBD8 /* LSConstants.swift */; };
 		43B325651F83EBDC00329ED5 /* LSFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B325641F83EBDC00329ED5 /* LSFonts.swift */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +27,10 @@
 		4315F7041F82AA4C00360B15 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4315F7071F82AA4C00360B15 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4315F7091F82AA4C00360B15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		437A742A1F8B5A15003BEBD8 /* LSSquareBulletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSSquareBulletView.swift; sourceTree = "<group>"; };
+		437A742C1F8B5AE8003BEBD8 /* LSColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSColors.swift; sourceTree = "<group>"; };
+		437A742E1F8B7070003BEBD8 /* LSLinkStartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSLinkStartViewController.swift; sourceTree = "<group>"; };
+		437A74301F8B714E003BEBD8 /* LSConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSConstants.swift; sourceTree = "<group>"; };
 		43B325641F83EBDC00329ED5 /* LSFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSFonts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,7 +66,11 @@
 			children = (
 				4315F6FA1F82AA4C00360B15 /* AppDelegate.swift */,
 				4315F6FC1F82AA4C00360B15 /* LSHomeViewController.swift */,
+				437A742E1F8B7070003BEBD8 /* LSLinkStartViewController.swift */,
+				437A74301F8B714E003BEBD8 /* LSConstants.swift */,
+				437A742A1F8B5A15003BEBD8 /* LSSquareBulletView.swift */,
 				43B325641F83EBDC00329ED5 /* LSFonts.swift */,
+				437A742C1F8B5AE8003BEBD8 /* LSColors.swift */,
 				4315F7041F82AA4C00360B15 /* Assets.xcassets */,
 				4315F7061F82AA4C00360B15 /* LaunchScreen.storyboard */,
 				4315F7091F82AA4C00360B15 /* Info.plist */,
@@ -138,9 +150,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				437A74311F8B714E003BEBD8 /* LSConstants.swift in Sources */,
 				4315F7031F82AA4C00360B15 /* LinkSystem.xcdatamodeld in Sources */,
+				437A742F1F8B7070003BEBD8 /* LSLinkStartViewController.swift in Sources */,
 				43B325651F83EBDC00329ED5 /* LSFonts.swift in Sources */,
+				437A742B1F8B5A15003BEBD8 /* LSSquareBulletView.swift in Sources */,
 				4315F6FD1F82AA4C00360B15 /* LSHomeViewController.swift in Sources */,
+				437A742D1F8B5AE8003BEBD8 /* LSColors.swift in Sources */,
 				4315F6FB1F82AA4C00360B15 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
