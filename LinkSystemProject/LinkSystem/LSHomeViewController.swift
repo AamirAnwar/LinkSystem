@@ -7,7 +7,6 @@
 //
 
 import UIKit
-let kStatusBarHeight:CGFloat = 20
 let kPageHeadingHorizontalPadding:CGFloat = 27
 let kPageHeadingTopPadding:CGFloat = 31
 let kInterItemPadding:CGFloat = 50
@@ -55,8 +54,7 @@ class LSHomeViewController: UIViewController {
             bullet.heightConstraint?.constant = LSSquareBulletView.squareSize
             bullet.widthConstraint?.constant = LSSquareBulletView.squareSize
         }
-        
-        UIView.animate(withDuration: 1, delay: 1.0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.1, options: [.curveEaseOut], animations: {
+        UIView.animate(withDuration: 1, delay: 0.5, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.1, options: [.curveEaseOut], animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }

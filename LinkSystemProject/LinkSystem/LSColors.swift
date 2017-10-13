@@ -11,6 +11,8 @@ import UIKit
 
 enum LSColors {
     static let CustomBlack = UIColor.init(hex:0x565656)
+    static let LightGrey = UIColor.init(hex: 0xC7C7CD)
+    static let DarkGrey = UIColor.init(hex: 0x8F8E94)    
 }
 
 
