@@ -22,5 +22,36 @@ import UIKit
  - 10 : "AvenirNext-Bold"
  - 11 : "AvenirNext-UltraLight"
  */
-let LSFontPageHeading = UIFont(name: "AvenirNext-Bold", size: 53)
-let LSFontSectionHeading = UIFont(name: "AvenirNext-DemiBold", size: 39)
+enum LSFonts {
+    static let PageHeading = UIFont(name: "AvenirNext-Bold", size: 53)!
+    static let SectionHeadingBig = UIFont(name: "AvenirNext-DemiBold", size: 39)!
+    static let SectionHeadingMedium = UIFont(name: "AvenirNext-DemiBold", size: 32)!
+    static let ParagraphTitleBig = UIFont(name: "AvenirNext-Medium", size: 26)!
+    static let ParagraphBody = UIFont(name: "AvenirNext-Regular", size: 18)!
+    static let NavigationActionTitle = UIFont(name: "AvenirNext-DemiBold", size: 20)!
+    static let ParagraphTitleMedium = UIFont(name: "AvenirNext-Medium", size: 19)!
+    static let ParagraphBodySmall = UIFont(name: "AvenirNext-Medium", size: 13)!
+    
+    // Special font just for the recall page
+    static let RecallFieldInput = UIFont(name: "AvenirNext-Medium", size: 40)!
+    
+    
+    
+    static func iconFontWith(size:Int) -> UIFont {
+        return UIFont(name: "ionicons", size: CGFloat(size))!
+    }
+}
+
+enum LSFontIcon {
+    static let chevronDown = try! "&#xf123;".convertHtmlSymbols()
+    static let chevronUp = try! "&#xf126;".convertHtmlSymbols()
+    static let closeButtonRounded = try! "&#xf129;".convertHtmlSymbols()
+}
+
+extension String {
+    func convertHtmlSymbols() throws -> String? {
+        guard let data = data(using: .utf8) else { return nil }
+        return try NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html, NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil).string
+    }
+}
+
