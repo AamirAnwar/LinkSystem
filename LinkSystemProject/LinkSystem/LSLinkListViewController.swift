@@ -137,6 +137,7 @@ class LSLinkListViewController: UIViewController {
     
     func getAverageTimePerItem() -> Double {
         var totalTime:Double = 0
+        var totalItems:Int = 0
         for (i,time) in answerTimestamps.enumerated() {
             guard time > 0.0 else {continue}
             
@@ -144,10 +145,12 @@ class LSLinkListViewController: UIViewController {
             if i > 0 {
                 previousTime = answerTimestamps[i - 1]
             }
+            totalItems += 1
             totalTime += time - previousTime
         }
         
-        return totalTime/Double(linkItems.count)
+        guard totalItems > 0 else {return 0.0}
+        return totalTime/Double(totalItems)
     }
     
     @objc func rightNavButtonTapped() {
