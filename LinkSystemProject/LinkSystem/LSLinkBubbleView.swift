@@ -67,10 +67,6 @@ class LSLinkBubbleView: UIView {
         currentItem = 0
     }
     
-    @objc func didTapLinkView() {
-            self.next()
-    }
-    
     func next() {
         guard currentItem < itemCount, isTransitioning == false else {return}
         isTransitioning = true
@@ -208,5 +204,9 @@ class LSLinkBubbleView: UIView {
     override var intrinsicContentSize: CGSize {
         return CGSize(width:UIScreen.main.bounds.width,height:110)
     }
+    
+//    @objc func didTapLinkView() {
+//        self.next()
+//    }
     
 }
