@@ -41,7 +41,8 @@ class LSLinkBubbleView: UIView {
         super.layoutSubviews()
         guard bubbles.isEmpty else {return}
         
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapLinkView)))
+//        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapLinkView)))
+        
         lineView.frame = CGRect(x: frame.width/2, y: frame.height/2 - 0.5, width: frame.width/2, height: 1)
         lineView.backgroundColor = LSColors.CustomBlack
         addSubview(lineView)
