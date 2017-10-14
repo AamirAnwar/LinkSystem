@@ -8,10 +8,7 @@
 
 import UIKit
 
-
-
 fileprivate let linkViewCustomSidePadding = 4*kSidePadding
-
 
 enum LinkBubble:CGFloat {
     case LinkBubbleBig = 90.0
@@ -40,9 +37,7 @@ class LSLinkBubbleView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         guard bubbles.isEmpty else {return}
-        
 //        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapLinkView)))
-        
         lineView.frame = CGRect(x: frame.width/2, y: frame.height/2 - 0.5, width: frame.width/2, height: 1)
         lineView.backgroundColor = LSColors.CustomBlack
         addSubview(lineView)
@@ -50,7 +45,6 @@ class LSLinkBubbleView: UIView {
         
         let (width,_) = (frame.size.width, frame.size.height)
         let x = width/2
-        
         middleRegionPadding = (width - 2*LinkBubble.LinkBubbleRegular.rawValue - LinkBubble.LinkBubbleBig.rawValue - 2*linkViewCustomSidePadding)/2
         
         let currentBubble = LinkBubble.getBubbleWith(size: .LinkBubbleBig)
@@ -60,7 +54,6 @@ class LSLinkBubbleView: UIView {
         let nextBubble = LinkBubble.getBubbleWith(size: .LinkBubbleRegular)
         nextBubble.frame = CGRect(x: currentBubble.frame.maxX + middleRegionPadding, y: frame.height/2 - nextBubble.frame.height/2, width: nextBubble.frame.width, height: nextBubble.frame.height)
         addSubview(nextBubble)
-        
         
         let forthComingBubble = LinkBubble.getBubbleWith(size: .LinkBubbleRegular)
         forthComingBubble.frame = CGRect(x: frame.width, y: nextBubble.frame.minY, width: forthComingBubble.frame.width, height: forthComingBubble.frame.height)
@@ -77,7 +70,6 @@ class LSLinkBubbleView: UIView {
     @objc func didTapLinkView() {
             self.next()
     }
-    
     
     func next() {
         guard currentItem < itemCount, isTransitioning == false else {return}
@@ -169,16 +161,12 @@ class LSLinkBubbleView: UIView {
         currentItem += 1
     }
     
-    
-    
     func createForthComingBubble() -> UIView {
         let forthComingBubble = LinkBubble.getBubbleWith(size: .LinkBubbleRegular)
         forthComingBubble.frame = CGRect(x: self.frame.width + self.middleRegionPadding, y: self.frame.height/2 - forthComingBubble.frame.height/2, width: forthComingBubble.frame.width, height: forthComingBubble.frame.height)
         self.addSubview(forthComingBubble)
         return forthComingBubble
     }
-    
-    
     
     func fillCurrentPositionWith(bubble:UIView) {
         let size = LinkBubble.LinkBubbleBig.rawValue
