@@ -20,7 +20,7 @@ class LSLinkListViewController: UIViewController {
     let linkListCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     var linkItems:[String] = []
     var itemCount:Int = 4
-    
+    var panGesture:UIPanGestureRecognizer!
     var recallViewController:LSRecallViewController?
     var timer:Timer?
     var timeCount:Double = 0.0
@@ -37,6 +37,7 @@ class LSLinkListViewController: UIViewController {
         }
         return [String]()
     }()
+    var animator:TransitionAnimator? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +45,9 @@ class LSLinkListViewController: UIViewController {
         if linkItems.isEmpty {
             loadLinkItems(withCount: itemCount)
         }
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(gesture:)))
+        view.addGestureRecognizer(panGesture)
+        
         instructionHeadingLabel.translatesAutoresizingMaskIntoConstraints = false
         instructionLabel.translatesAutoresizingMaskIntoConstraints = false
         closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -70,11 +74,11 @@ class LSLinkListViewController: UIViewController {
         instructionLabel.font = LSFonts.ParagraphBody
         instructionLabel.numberOfLines = 0
         
-        closeButton.titleLabel?.font = LSFonts.iconFontWith(size: 14)
+        closeButton.titleLabel?.font = LSFonts.iconFontWith(size: 16)
         view.addSubview(closeButton)
         closeButton.setTitle(LSFontIcon.closeButtonRounded, for: .normal)
-        closeButton.setTitleColor(UIColor.white, for: .normal)
-        closeButton.backgroundColor = LSColors.DarkGrey
+        closeButton.setTitleColor(LSColors.CustomBlack, for: .normal)
+        closeButton.backgroundColor = UIColor.white
         closeButton.layer.cornerRadius = kCloseButtonSize/2
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         
@@ -114,9 +118,12 @@ class LSLinkListViewController: UIViewController {
     
     func loadLinkItems(withCount count:Int) {
         linkItems.removeAll()
-        for _ in 0..<count {
+        guard itemCount > 0 else {return}
+        while linkItems.count != itemCount {
             let randomIndex = Int(arc4random())%(allItems.count)
-            linkItems += [allItems[randomIndex]]
+            let item = allItems[randomIndex]
+            guard item.isEmpty == false else {continue}
+            linkItems += [item]
         }
     }
     
@@ -131,6 +138,8 @@ class LSLinkListViewController: UIViewController {
             
             statData += [("Average time per item - \(NSString(format: "%.2f", getAverageTimePerItem())) seconds","Average time is the total time taken to recall each item  in the link chain divided by the total number of items")]
             statVC.stats = statData
+            statVC.animator = self.animator
+            statVC.transitioningDelegate = self
             present(statVC, animated: true)
         }
     }
@@ -210,8 +219,44 @@ class LSLinkListViewController: UIViewController {
         dismiss(animated: true)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    @objc func handlePan(gesture:UIPanGestureRecognizer) {
+        guard let superView = view.superview, abs(gesture.translation(in: superView).y) > 0 else {return}
+        switch panGesture.state {
+        case .began:
+            if gesture.translation(in: gesture.view!.superview).y < 0 {
+                goToStatsPage()
+            }
+            else {
+                closeButtonTapped()
+            }
+            
+            self.animator?.handlePan(gesture: gesture)
+        default:
+            self.animator?.handlePan(gesture: gesture)
+        }
+    }
+
+}
+
+extension LSLinkListViewController:UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.animator?.isPresenting = true
+        return self.animator
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.animator?.isPresenting = false
+        return self.animator
+    }
+    
+    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        self.animator?.isPresenting = true
+        return self.animator
+    }
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        self.animator?.isPresenting = false
+        return self.animator
     }
 }
 

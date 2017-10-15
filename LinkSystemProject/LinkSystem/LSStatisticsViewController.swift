@@ -17,6 +17,8 @@ class LSStatisticsViewController: UIViewController {
     let backButton = UIButton(type: .system)
     let homeChevronButton = UIButton(type: .system)
     let repeatLinkButton = UIButton(type: .system)
+    var panGesture:UIPanGestureRecognizer!
+    var animator:TransitionAnimator? = nil
     
     fileprivate func createHomeChevronButton() {
         view.addSubview(homeChevronButton)
@@ -29,6 +31,9 @@ class LSStatisticsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(gesture:)))
+        view.addGestureRecognizer(panGesture)
+        
         createPageHeadingLabel()
         createHomeChevronButton()
         
@@ -93,21 +98,45 @@ class LSStatisticsViewController: UIViewController {
     }
     
     @objc func goHomeTapped() {
-        if let delegate = UIApplication.shared.delegate as? AppDelegate {
-            delegate.window?.rootViewController = LSHomeViewController()
-        }
+        let vc = LSHomeViewController()
+        vc.transitioningDelegate = self
+        present(vc, animated: true)
     }
     
     @objc func repeatLinkTapped() {
         if let linkItems = linkItems {
             let vc = LSLinkListViewController()
             vc.linkItems = linkItems
+            vc.transitioningDelegate = self
             present(vc, animated: true)
         }
     }
     
-
+    @objc func handlePan(gesture:UIPanGestureRecognizer) {
+        guard let superView = view.superview, abs(gesture.translation(in: superView).y) > 0 else {return}
+        switch panGesture.state {
+        case .began:
+            goHomeTapped()
+            self.animator?.handlePan(gesture: gesture)
+        default:
+            self.animator?.handlePan(gesture: gesture)
+        }
+    }
 }
+
+extension LSStatisticsViewController:UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.animator?.isPresenting = true
+        return self.animator
+    }
+    
+    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        self.animator?.isPresenting = true
+        return self.animator
+    }
+}
+
 
 extension LSStatisticsViewController:UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

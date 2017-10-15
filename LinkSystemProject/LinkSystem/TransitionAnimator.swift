@@ -12,6 +12,8 @@ import UIKit
 class TransitionAnimator:UIPercentDrivenInteractiveTransition,UIViewControllerAnimatedTransitioning, CAAnimationDelegate {
     
     let animationDuration = 0.5
+    var isPresenting = false
+    weak var storedContext:UIViewControllerContextTransitioning?
     
     //MARK: Transition Methods
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -20,25 +22,46 @@ class TransitionAnimator:UIPercentDrivenInteractiveTransition,UIViewControllerAn
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
-        let fromVC = transitionContext.viewController(forKey: .from)!
-        let toVC = transitionContext.viewController(forKey: .to)!
-        let fromVCSnapshot = fromVC.view.snapshotView(afterScreenUpdates: false)!
+        let containerView = transitionContext.containerView
+        let toView = transitionContext.view(forKey: .to)!
+        let fromView = transitionContext.view(forKey: .from)!
+        storedContext = transitionContext
+        toView.transform = .identity
+        toView.frame = transitionContext.finalFrame(for: transitionContext.viewController(forKey: .to)!)
+        containerView.addSubview(toView)
+        containerView.bringSubview(toFront: toView)
+        let direction:CGFloat = isPresenting ? 1 : -1
         
-        fromVCSnapshot.frame = fromVC.view.frame
-        transitionContext.containerView.addSubview(fromVCSnapshot)
-        transitionContext.containerView.addSubview(toVC.view)
-        
-        toVC.view.frame = transitionContext.finalFrame(for: toVC)
-        toVC.view.transform = CGAffineTransform(translationX: 0, y: toVC.view.frame.height)
+        toView.transform = CGAffineTransform(translationX: 0, y: direction*toView.frame.height)
         
         UIView.animate(withDuration: animationDuration, animations: {
-            fromVCSnapshot.transform = CGAffineTransform(translationX: 0, y: -toVC.view.frame.height)
-            fromVC.view.transform = CGAffineTransform(translationX: 0, y: -toVC.view.frame.height)
-            toVC.view.transform = .identity
+            toView.transform = .identity
+            fromView.transform = CGAffineTransform(translationX: 0, y: direction*(-fromView.frame.height))
         }) { (_) in
-            fromVCSnapshot.removeFromSuperview()
-            fromVC.view.transform = .identity
-            transitionContext.completeTransition(true)
+            fromView.transform = .identity
+            if transitionContext.transitionWasCancelled {
+                toView.removeFromSuperview()
+            }
+            else {
+                toView.frame = transitionContext.finalFrame(for: transitionContext.viewController(forKey: .to)!)
+            }
+            transitionContext.transitionWasCancelled ? print("Closing transition because it was cancelled") : print("Finishing transition normally")
+//            if transitionContext.transitionWasCancelled {
+//                fromView.frame = transitionContext.finalFrame(for: transitionContext.viewController(forKey: .to)!)
+//            }
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+//            self.storedContext = nil
+        }
+    }
+    
+    func animationEnded(_ transitionCompleted: Bool) {
+        if let context = self.storedContext {
+            if context.transitionWasCancelled {
+               print("From view at the end of a cancelled animation\(context.view(forKey: .from))")
+                  print("To view at the end of a cancelled animation\(context.view(forKey: .to))")
+                self.storedContext = nil
+                
+            }
         }
     }
     
@@ -48,12 +71,24 @@ class TransitionAnimator:UIPercentDrivenInteractiveTransition,UIViewControllerAn
         var progress:CGFloat = abs(translation/gesture.view!.frame.size.height)
         progress = min(max(progress,0.01), 0.99)
         print(progress)
+        let isPullingUp = translation < 0
+        
+        
+        guard isPresenting == isPullingUp else {
+            print("Cancelling animation")
+            cancel()
+            return
+            
+        }
         switch gesture.state {
+            
+        case .began:
+            update(0.01)
         case .changed:
             update(progress)
             
         case .ended,.cancelled:
-            finish()
+            (progress > 0.2) ? finish() : cancel()
         default:
             break
         }

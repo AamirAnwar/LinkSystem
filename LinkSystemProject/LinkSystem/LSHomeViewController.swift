@@ -18,8 +18,13 @@ class LSHomeViewController: UIViewController {
     let sectionItems = ["Practice", "Statistics", "Licences"]
     var sectionLabels:[UIButton] = []
     var sectionBullets: [LSSquareBulletView] = []
+    var panGesture:UIPanGestureRecognizer!
+    let animator = TransitionAnimator()
     override func viewDidLoad() {
         super.viewDidLoad()
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(gesture:)))
+        view.addGestureRecognizer(panGesture)
+        
         view.backgroundColor = UIColor.white
         createPageHeadingLabel()
         createSectionItemLabels()
@@ -44,7 +49,6 @@ class LSHomeViewController: UIViewController {
                 bullet.centerYAnchor.constraint(equalTo: label.centerYAnchor),
                 bullet.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: -20),
                 ])
-            
         }
     }
     
@@ -54,7 +58,7 @@ class LSHomeViewController: UIViewController {
             bullet.heightConstraint?.constant = LSSquareBulletView.squareSize
             bullet.widthConstraint?.constant = LSSquareBulletView.squareSize
         }
-        UIView.animate(withDuration: 1, delay: 0.5, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.1, options: [.curveEaseOut], animations: {
+        UIView.animate(withDuration: 1, delay: 0.3, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.1, options: [.curveEaseOut], animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
@@ -105,7 +109,10 @@ class LSHomeViewController: UIViewController {
     }
     
     @objc func goToLinkSettingsPage() {
-        present(LSLinkStartViewController(), animated: true, completion: nil)
+        let vc = LSLinkStartViewController()
+        vc.transitioningDelegate = self
+        vc.animator = self.animator
+        present(vc, animated: true, completion: nil)
     }
     
     @objc func goToStatisticsPage() {
@@ -116,10 +123,37 @@ class LSHomeViewController: UIViewController {
         
     }
     
+    @objc func handlePan(gesture:UIPanGestureRecognizer) {
+        guard let superView = view.superview, abs(gesture.translation(in: superView).y) > 0 else {return}
+        switch panGesture.state {
+        case .began:
+            goToLinkSettingsPage()
+            animator.handlePan(gesture: gesture)
+        default:
+            animator.handlePan(gesture: gesture)
+        }
+    }
+}
+
+extension LSHomeViewController:UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.animator.isPresenting = true
+        return self.animator
+    }
     
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.animator.isPresenting = false
+        return self.animator
+    }
     
-
-
-
+    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        self.animator.isPresenting = true
+        return self.animator
+    }
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        self.animator.isPresenting = false
+        return self.animator
+    }
 }
 

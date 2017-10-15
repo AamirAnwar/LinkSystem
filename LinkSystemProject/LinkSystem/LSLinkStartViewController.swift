@@ -17,6 +17,8 @@ class LSLinkStartViewController:UIViewController {
     let startLinkButton = UIButton(type: .system)
     let startLinkChevronButton = UIButton(type: .system)
     let backChevronButton = UIButton(type: .system)
+    var panGesture:UIPanGestureRecognizer!
+    var animator:TransitionAnimator? = nil
     
     fileprivate func createHeadingLabel() {
         view.addSubview(headingLabel)
@@ -81,14 +83,7 @@ class LSLinkStartViewController:UIViewController {
         startLinkChevronButton.addTarget(self, action: #selector(startLink), for: .touchUpInside)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = UIColor.white
-        createHeadingLabel()
-        createItemCountTextField()
-        createStartLinkButton()
-        createStartLinkChevronButton()
-        
+    fileprivate func createBackChevronButton() {
         view.addSubview(backChevronButton)
         backChevronButton.translatesAutoresizingMaskIntoConstraints = false
         backChevronButton.setTitle(LSFontIcon.chevronUp, for: .normal)
@@ -97,10 +92,23 @@ class LSLinkStartViewController:UIViewController {
         backChevronButton.titleLabel?.font = LSFonts.iconFontWith(size: 22)
         backChevronButton.layer.borderColor = LSColors.LightGrey.cgColor
         backChevronButton.layer.borderWidth = 0.7
-        backChevronButton.addTarget(self, action: #selector(backChevronTapped), for: .touchUpInside)
-        
         let inset:CGFloat = 10
         backChevronButton.contentEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        backChevronButton.addTarget(self, action: #selector(backChevronTapped), for: .touchUpInside)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor.white
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(gesture:)))
+        view.addGestureRecognizer(panGesture)
+        
+        createHeadingLabel()
+        createItemCountTextField()
+        createStartLinkButton()
+        createStartLinkChevronButton()
+        createBackChevronButton()
+        
         NSLayoutConstraint.activate([
             backChevronButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             backChevronButton.topAnchor.constraint(equalTo: view.topAnchor, constant:kStatusBarHeight + 2*kDefaultPadding)
@@ -142,12 +150,56 @@ class LSLinkStartViewController:UIViewController {
         if let count = Int(itemCountTextField.text!) {
             let vc = LSLinkListViewController()
             vc.itemCount = count
+            vc.transitioningDelegate = self
+            vc.animator = self.animator
             present(vc, animated: true)
+        }
+    }
+    
+    @objc func handlePan(gesture:UIPanGestureRecognizer) {
+        guard let superView = view.superview, abs(gesture.translation(in: superView).y) > 0 else {return}
+        switch panGesture.state {
+        case .began:
+            if gesture.translation(in: gesture.view!.superview).y < 0 {
+                startLink()
+            }
+            else {
+                backChevronTapped()
+                
+            }
+            animator?.handlePan(gesture: gesture)
+        default:
+            animator?.handlePan(gesture: gesture)
         }
     }
 
 }
 
+extension LSLinkStartViewController:UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.animator?.isPresenting = true
+        return self.animator
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.animator?.isPresenting = false
+        return self.animator
+    }
+    
+    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        self.animator?.isPresenting = true
+        return self.animator
+    }
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        self.animator?.isPresenting = false
+        return self.animator
+    }
+    
+    
+    
+}
 
 extension LSLinkStartViewController:UITextFieldDelegate {
     
