@@ -13,3 +13,5 @@ let kSidePadding:CGFloat = 8
 let kDefaultPadding:CGFloat = 8
 let kStatusBarHeight:CGFloat = 20
 let kCornerRadius:CGFloat = 4
+let kGameCountKey = "LinkSystemGameCountKey"
+let kLinkStreakKey = "LinkSystemLongestStreakKey"
