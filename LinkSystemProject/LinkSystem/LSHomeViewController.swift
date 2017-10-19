@@ -116,7 +116,16 @@ class LSHomeViewController: UIViewController {
     }
     
     @objc func goToStatisticsPage() {
+        let statVC = LSStatisticsViewController()
+        var statData = [(title:String,text:String)]()
+        statData += [("Total number of links - \(NSString(format: "%d", LSHelpers.totalGameCount))", "This number represents the total number of links you've attempted to recall")]
+        statData += [("Longest successful link length - \(LSHelpers.longestStreakCount)", "The longest link recalled with 100% completion ratio")]
         
+
+        statVC.stats = statData
+        statVC.animator = self.animator
+        statVC.transitioningDelegate = self
+        present(statVC, animated: true)
     }
     
     @objc func goToLicencesPage() {

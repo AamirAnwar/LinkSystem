@@ -45,7 +45,7 @@ class TransitionAnimator:UIPercentDrivenInteractiveTransition,UIViewControllerAn
             else {
                 toView.frame = transitionContext.finalFrame(for: transitionContext.viewController(forKey: .to)!)
             }
-            transitionContext.transitionWasCancelled ? print("Closing transition because it was cancelled") : print("Finishing transition normally")
+//            transitionContext.transitionWasCancelled ? print("Closing transition because it was cancelled") : print("Finishing transition normally")
 //            if transitionContext.transitionWasCancelled {
 //                fromView.frame = transitionContext.finalFrame(for: transitionContext.viewController(forKey: .to)!)
 //            }
@@ -57,8 +57,8 @@ class TransitionAnimator:UIPercentDrivenInteractiveTransition,UIViewControllerAn
     func animationEnded(_ transitionCompleted: Bool) {
         if let context = self.storedContext {
             if context.transitionWasCancelled {
-               print("From view at the end of a cancelled animation\(context.view(forKey: .from))")
-                  print("To view at the end of a cancelled animation\(context.view(forKey: .to))")
+//                print("From view at the end of a cancelled animation\(context.view(forKey: .from))")
+//                print("To view at the end of a cancelled animation\(context.view(forKey: .to))")
                 self.storedContext = nil
                 
             }
@@ -70,12 +70,10 @@ class TransitionAnimator:UIPercentDrivenInteractiveTransition,UIViewControllerAn
         let translation = gesture.translation(in: gesture.view!.superview!).y
         var progress:CGFloat = abs(translation/gesture.view!.frame.size.height)
         progress = min(max(progress,0.01), 0.99)
-        print(progress)
         let isPullingUp = translation < 0
         
         
         guard isPresenting == isPullingUp else {
-            print("Cancelling animation")
             cancel()
             return
             

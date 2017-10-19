@@ -165,8 +165,12 @@ class LSLinkListViewController: UIViewController {
     @objc func rightNavButtonTapped() {
         guard recallViewController == nil else {
             goToStatsPage()
+            if recallViewController!.bubbleView.currentItem == linkItems.count {
+                LSHelpers.updateLongestLinkStreak(withSteak: linkItems.count)
+            }
             return
         }
+        LSHelpers.incrementGameCount()
         UIView.transition(with: rightNavButton, duration: 1.0, options: [.transitionCrossDissolve], animations: {
             self.rightNavButton.setTitle("Done", for: .normal)
         })
