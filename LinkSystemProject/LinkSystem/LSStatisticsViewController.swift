@@ -23,20 +23,18 @@ class LSStatisticsViewController: UIViewController {
     fileprivate func createHomeChevronButton() {
         view.addSubview(homeChevronButton)
         homeChevronButton.translatesAutoresizingMaskIntoConstraints = false
-        homeChevronButton.setTitle(LSFontIcon.chevronDown, for: .normal)
+        if linkItems != nil {
+            homeChevronButton.setTitle(LSFontIcon.chevronDown, for: .normal)
+        }
+        else {
+            homeChevronButton.setTitle(LSFontIcon.chevronUp, for: .normal)
+        }
         homeChevronButton.setTitleColor(LSColors.CustomBlack, for: .normal)
         homeChevronButton.titleLabel?.font = LSFonts.iconFontWith(size: 24)
         homeChevronButton.addTarget(self, action: #selector(goHomeTapped), for: .touchUpInside)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(gesture:)))
-        view.addGestureRecognizer(panGesture)
-        
-        createPageHeadingLabel()
-        createHomeChevronButton()
-        
+    fileprivate func createRepeatLinkButton() {
         view.addSubview(repeatLinkButton)
         repeatLinkButton.translatesAutoresizingMaskIntoConstraints = false
         repeatLinkButton.setTitle("Try again", for: .normal)
@@ -44,8 +42,18 @@ class LSStatisticsViewController: UIViewController {
         repeatLinkButton.backgroundColor = LSColors.CustomBlack
         repeatLinkButton.titleLabel?.font = LSFonts.NavigationActionTitle
         repeatLinkButton.addTarget(self, action: #selector(repeatLinkTapped), for: .touchUpInside)
-        
-        
+    }
+    
+    fileprivate func createBackButton() {
+        view.addSubview(backButton)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.setTitle("Proceed", for: .normal)
+        backButton.titleLabel?.font = LSFonts.SectionHeadingMedium
+        backButton.setTitleColor(LSColors.CustomBlack, for: .normal)
+        backButton.addTarget(self, action: #selector(goHomeTapped), for: .touchUpInside)
+    }
+    
+    fileprivate func createTableView() {
         view.backgroundColor = UIColor.white
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -55,35 +63,65 @@ class LSStatisticsViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(LSStatsTableViewCell.self, forCellReuseIdentifier: kStatCellReuseIdentifier)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(gesture:)))
+        view.addGestureRecognizer(panGesture)
         
-        view.addSubview(backButton)
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.setTitle("Proceed", for: .normal)
-        backButton.titleLabel?.font = LSFonts.SectionHeadingMedium
-        backButton.setTitleColor(LSColors.CustomBlack, for: .normal)
-        backButton.addTarget(self, action: #selector(goHomeTapped), for: .touchUpInside)
-        NSLayoutConstraint.activate([
-            pageHeadingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: kPageHeadingHorizontalPadding),
-            pageHeadingLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -kPageHeadingHorizontalPadding),
-            pageHeadingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: kStatusBarHeight + kPageHeadingTopPadding),
-            tableView.topAnchor.constraint(equalTo: pageHeadingLabel.bottomAnchor, constant: 4*kDefaultPadding),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: kSidePadding),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -kSidePadding),
-            tableView.bottomAnchor.constraint(equalTo: repeatLinkButton.topAnchor, constant:-3*kDefaultPadding),
+        createPageHeadingLabel()
+        createHomeChevronButton()
+        createRepeatLinkButton()
+        createTableView()
+        createBackButton()
+        
+        
+        if linkItems == nil {
+            backButton.isHidden = true
+            repeatLinkButton.isHidden = true
+
+            NSLayoutConstraint.activate([
+                homeChevronButton.topAnchor.constraint(equalTo: view.topAnchor, constant: kStatusBarHeight + 20),
+                homeChevronButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                
+                pageHeadingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: kPageHeadingHorizontalPadding),
+                pageHeadingLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -kPageHeadingHorizontalPadding),
+                pageHeadingLabel.topAnchor.constraint(equalTo: homeChevronButton.bottomAnchor, constant: kPageHeadingTopPadding),
+                
+                tableView.topAnchor.constraint(equalTo: pageHeadingLabel.bottomAnchor, constant: 2*kDefaultPadding),
+                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: kSidePadding),
+                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -kSidePadding),
+                tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                ])
             
-            repeatLinkButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            repeatLinkButton.widthAnchor.constraint(equalToConstant: 125),
-            repeatLinkButton.heightAnchor.constraint(equalToConstant: 44),
-            
-            backButton.topAnchor.constraint(equalTo: repeatLinkButton.bottomAnchor, constant: 40),
-            backButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            backButton.bottomAnchor.constraint(equalTo: homeChevronButton.topAnchor, constant:kDefaultPadding),
-            
-            homeChevronButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            homeChevronButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant:-3*kDefaultPadding),
-            
-            
-            ])
+        }
+        else {
+            NSLayoutConstraint.activate([
+                pageHeadingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: kPageHeadingHorizontalPadding),
+                pageHeadingLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -kPageHeadingHorizontalPadding),
+                pageHeadingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: kStatusBarHeight + kPageHeadingTopPadding),
+                
+                tableView.topAnchor.constraint(equalTo: pageHeadingLabel.bottomAnchor, constant: 4*kDefaultPadding),
+                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: kSidePadding),
+                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -kSidePadding),
+                tableView.bottomAnchor.constraint(equalTo: repeatLinkButton.topAnchor, constant:-3*kDefaultPadding),
+                
+                repeatLinkButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                repeatLinkButton.widthAnchor.constraint(equalToConstant: 125),
+                repeatLinkButton.heightAnchor.constraint(equalToConstant: 44),
+                
+                backButton.topAnchor.constraint(equalTo: repeatLinkButton.bottomAnchor, constant: 40),
+                backButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                backButton.bottomAnchor.constraint(equalTo: homeChevronButton.topAnchor, constant:kDefaultPadding),
+                
+                homeChevronButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                homeChevronButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant:-3*kDefaultPadding),
+                
+                ])
+        }
+        
+  
     }
     
     
@@ -98,6 +136,11 @@ class LSStatisticsViewController: UIViewController {
     }
     
     @objc func goHomeTapped() {
+        
+        guard linkItems != nil else {
+            dismiss(animated: true)
+            return
+        }
         let vc = LSHomeViewController()
         vc.transitioningDelegate = self
         present(vc, animated: true)
