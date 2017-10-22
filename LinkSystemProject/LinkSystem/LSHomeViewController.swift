@@ -9,10 +9,6 @@
 import UIKit
 
 
-fileprivate let kPageHeadingHorizontalPadding:CGFloat = 27
-fileprivate let kPageHeadingTopPadding:CGFloat = 31
-fileprivate let kInterSectionVerticalPadding:CGFloat = 50
-
 class LSHomeViewController: UIViewController {
 
     let pageHeadingLabel = UILabel()
