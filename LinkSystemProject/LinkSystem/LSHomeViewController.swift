@@ -12,7 +12,7 @@ import UIKit
 class LSHomeViewController: UIViewController {
 
     let pageHeadingLabel = UILabel()
-    let sectionItems = ["Practice", "Statistics", "Licences"]
+    let sectionItems = ["Practice", "Statistics", "About"]
     var sectionLabels:[UIButton] = []
     var sectionBullets: [LSSquareBulletView] = []
     var panGesture:UIPanGestureRecognizer!
