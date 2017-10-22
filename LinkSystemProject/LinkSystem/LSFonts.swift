@@ -43,10 +43,39 @@ enum LSFonts {
 }
 
 enum LSFontIcon {
-    static let chevronDown = try! "&#xf123;".convertHtmlSymbols()
-    static let chevronUp = try! "&#xf126;".convertHtmlSymbols()
-    static let closeButtonRounded = try! "&#xf129;".convertHtmlSymbols()
+
+    static var chevronDown:String? {
+        do {
+            let symbol = try "&#xf123;".convertHtmlSymbols()
+            return symbol
+        } catch {
+            print("Error")
+        }
+        return nil
+    }
+    
+    static var chevronUp:String? {
+        do {
+            let symbol = try "&#xf126;".convertHtmlSymbols()
+            return symbol
+        } catch {
+            print("Error")
+        }
+        return nil
+    }
+    
+    static var closeButtonRounded:String? {
+        do {
+            let symbol = try "&#xf129;".convertHtmlSymbols()
+            return symbol
+        } catch {
+            print("Error")
+        }
+        return nil
+    }
+    
 }
+
 
 extension String {
     func convertHtmlSymbols() throws -> String? {
