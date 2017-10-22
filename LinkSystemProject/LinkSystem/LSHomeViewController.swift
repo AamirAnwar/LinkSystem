@@ -7,10 +7,11 @@
 //
 
 import UIKit
-let kPageHeadingHorizontalPadding:CGFloat = 27
-let kPageHeadingTopPadding:CGFloat = 31
-let kInterItemPadding:CGFloat = 50
 
+
+fileprivate let kPageHeadingHorizontalPadding:CGFloat = 27
+fileprivate let kPageHeadingTopPadding:CGFloat = 31
+fileprivate let kInterSectionVerticalPadding:CGFloat = 50
 
 class LSHomeViewController: UIViewController {
 
@@ -20,12 +21,16 @@ class LSHomeViewController: UIViewController {
     var sectionBullets: [LSSquareBulletView] = []
     var panGesture:UIPanGestureRecognizer!
     let animator = TransitionAnimator()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(gesture:)))
         view.addGestureRecognizer(panGesture)
-        
         view.backgroundColor = UIColor.white
+        createViews()
+    }
+    
+    fileprivate func createViews() -> Void {
         createPageHeadingLabel()
         createSectionItemLabels()
         createSectionSquareBullets()
@@ -37,7 +42,7 @@ class LSHomeViewController: UIViewController {
             ])
         
         for (i,label) in sectionLabels.enumerated() {
-            let topPadding = i==0 ? CGFloat(66):kInterItemPadding
+            let topPadding = i==0 ? CGFloat(66):kInterSectionVerticalPadding
             let topAncestor:UIView = i==0 ? pageHeadingLabel:sectionLabels[i - 1]
             let bullet = sectionBullets[i]
             bullet.heightConstraint?.constant = 0
@@ -54,6 +59,10 @@ class LSHomeViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        animateBullets()
+    }
+    
+    fileprivate func animateBullets() {
         for bullet in sectionBullets {
             bullet.heightConstraint?.constant = LSSquareBulletView.squareSize
             bullet.widthConstraint?.constant = LSSquareBulletView.squareSize
@@ -62,6 +71,7 @@ class LSHomeViewController: UIViewController {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
+    
     
     func createPageHeadingLabel() {
         pageHeadingLabel.numberOfLines = 1
@@ -103,11 +113,6 @@ class LSHomeViewController: UIViewController {
     }
     
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        pageHeadingLabel.sizeToFit()
-    }
-    
     @objc func goToLinkSettingsPage() {
         let vc = LSLinkStartViewController()
         vc.transitioningDelegate = self
@@ -120,8 +125,6 @@ class LSHomeViewController: UIViewController {
         var statData = [(title:String,text:String)]()
         statData += [("Total number of links - \(NSString(format: "%d", LSHelpers.totalGameCount))", "This number represents the total number of links you've attempted to recall")]
         statData += [("Longest successful link length - \(LSHelpers.longestStreakCount)", "The longest link recalled with 100% completion ratio")]
-        
-
         statVC.stats = statData
         statVC.animator = self.animator
         statVC.transitioningDelegate = self
@@ -129,7 +132,7 @@ class LSHomeViewController: UIViewController {
     }
     
     @objc func goToLicencesPage() {
-        
+        // TODO: Fix this later
     }
     
     @objc func handlePan(gesture:UIPanGestureRecognizer) {
