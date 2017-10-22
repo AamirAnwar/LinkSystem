@@ -224,7 +224,11 @@ class LSLinkListViewController: UIViewController {
     }
     
     @objc func handlePan(gesture:UIPanGestureRecognizer) {
+        
+        guard recallViewController == nil else {return}
+        
         guard let superView = view.superview, abs(gesture.translation(in: superView).y) > 0 else {return}
+        
         switch panGesture.state {
         case .began:
             if gesture.translation(in: gesture.view!.superview).y < 0 {
