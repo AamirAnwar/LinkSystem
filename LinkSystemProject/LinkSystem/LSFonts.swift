@@ -33,7 +33,7 @@ enum LSFonts {
     static let ParagraphBodySmall = UIFont(name: "AvenirNext-Medium", size: 13)!
     
     // Special font just for the recall page
-    static let RecallFieldInput = UIFont(name: "AvenirNext-Medium", size: 40)!
+    static let RecallFieldInput = UIFont(name: "AvenirNext-Medium", size: 30)!
     
     
     
