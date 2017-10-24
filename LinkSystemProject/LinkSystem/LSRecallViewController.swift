@@ -10,18 +10,30 @@ import UIKit
 
 class LSRecallViewController: UIViewController {
 
+    let countLabel = UILabel()
     let textField = UITextField()
     let textFieldUnderline = UIView()
-    let bubbleView = LSLinkBubbleView()
     var delegate:UITextFieldDelegate?
+    var currentItem = 0 {
+        didSet {
+            countLabel.text = "\(currentItem)/\(itemCount)"
+        }
+    }
     var itemCount:Int = 10 {
         didSet {
-            bubbleView.itemCount = itemCount
+            countLabel.text = "0/\(itemCount)"
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        countLabel.translatesAutoresizingMaskIntoConstraints = false
+        countLabel.textColor = LSColors.CustomBlack
+        countLabel.font = LSFonts.ParagraphTitleBig
+        countLabel.textAlignment = .center
+        
+        
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.textColor = LSColors.CustomBlack
         textField.font = LSFonts.RecallFieldInput
@@ -32,32 +44,24 @@ class LSRecallViewController: UIViewController {
         textFieldUnderline.translatesAutoresizingMaskIntoConstraints = false
         textFieldUnderline.backgroundColor = LSColors.CustomBlack
         
-        bubbleView.translatesAutoresizingMaskIntoConstraints = false
-//        bubbleView.backgroundColor = UIColor.red
-        
-        view.addSubview(bubbleView)
+        view.addSubview(countLabel)
         view.addSubview(textField)
         view.addSubview(textFieldUnderline)
         
-        
         NSLayoutConstraint.activate([
             
-            bubbleView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bubbleView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bubbleView.topAnchor.constraint(equalTo: view.topAnchor, constant:kStatusBarHeight),
+            countLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            countLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            countLabel.topAnchor.constraint(equalTo: view.topAnchor, constant:4),
             
             textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:3*kSidePadding),
             textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:-3*kSidePadding),
-            textField.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant:kDefaultPadding*2),
+            textField.topAnchor.constraint(equalTo: countLabel.bottomAnchor, constant:kDefaultPadding*3),
             
             textFieldUnderline.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             textFieldUnderline.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
             textFieldUnderline.topAnchor.constraint(equalTo: textField.bottomAnchor, constant:5),
             textFieldUnderline.heightAnchor.constraint(equalToConstant: 1)
             ])
-        
-        
-        
-        
     }
 }

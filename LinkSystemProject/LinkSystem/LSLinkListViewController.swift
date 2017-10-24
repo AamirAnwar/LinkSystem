@@ -68,7 +68,7 @@ class LSLinkListViewController: UIViewController {
         instructionHeadingLabel.textColor = LSColors.LightGrey
         view.addSubview(instructionHeadingLabel)
         
-        instructionLabel.text = "Link each object to the next one using the link system method."
+        instructionLabel.text = "Remember all the items shown below in order"
         view.addSubview(instructionLabel)
         instructionLabel.textColor = LSColors.LightGrey
         instructionLabel.font = LSFonts.ParagraphBody
@@ -132,7 +132,7 @@ class LSLinkListViewController: UIViewController {
             let statVC = LSStatisticsViewController()
             statVC.linkItems = self.linkItems
             var statData = [(title:String,text:String)]()
-            statData += [("Item Recall Ratio - \(NSString(format: "%.2f",Double(recallViewController.bubbleView.currentItem)/Double(linkItems.count) * 100))%", "Item recall ratio is defined as the number of items successfully remembered divided by the total number of items")]
+            statData += [("Item Recall Ratio - \(NSString(format: "%.2f",Double(recallViewController.currentItem)/Double(linkItems.count) * 100))%", "Item recall ratio is defined as the number of items successfully remembered divided by the total number of items")]
             
             statData += [("Total Time - \(NSString(format: "%.2f", timeCount)) seconds", "")]
             
@@ -165,7 +165,8 @@ class LSLinkListViewController: UIViewController {
     @objc func rightNavButtonTapped() {
         guard recallViewController == nil else {
             goToStatsPage()
-            if recallViewController!.bubbleView.currentItem == linkItems.count {
+            
+            if recallViewController!.currentItem == linkItems.count {
                 LSHelpers.updateLongestLinkStreak(withSteak: linkItems.count)
             }
             return
@@ -289,15 +290,24 @@ extension LSLinkListViewController:UICollectionViewDelegate, UICollectionViewDat
 }
 
 extension LSLinkListViewController:UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard string != " " else {return false}
+        return true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let currentItemIndex = recallViewController?.bubbleView.currentItem {
-            guard currentItemIndex < linkItems.count else {return false}
+        if let currentItemIndex = recallViewController?.currentItem {
+            guard currentItemIndex < linkItems.count else {
+                return false
+            }
+            
             let item = linkItems[currentItemIndex]
             if textField.text?.caseInsensitiveCompare(item) == .orderedSame {
                 print("Correct answer for \(item) at \(timeCount) seconds")
                 answerTimestamps[currentItemIndex] = timeCount
-                recallViewController?.bubbleView.next()
-                UIView.transition(with: textField, duration: 0.5, options: [.transitionCrossDissolve], animations: {
+                recallViewController?.currentItem = currentItemIndex + 1
+                UIView.transition(with: textField, duration: 0.2, options: [.transitionCrossDissolve], animations: {
                     textField.text = ""
                 })
             }
@@ -305,6 +315,7 @@ extension LSLinkListViewController:UITextFieldDelegate {
             if currentItemIndex == linkItems.count - 1 {
                 self.timer?.invalidate()
                 print("Total time taken \(timeCount)")
+                goToStatsPage()
             }
         }
         return false
