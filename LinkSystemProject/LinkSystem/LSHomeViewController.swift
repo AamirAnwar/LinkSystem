@@ -75,6 +75,8 @@ class LSHomeViewController: UIViewController {
         pageHeadingLabel.translatesAutoresizingMaskIntoConstraints = false
         pageHeadingLabel.font = LSFonts.PageHeading
         pageHeadingLabel.text = "Link System"
+        pageHeadingLabel.minimumScaleFactor = 0.4
+        pageHeadingLabel.adjustsFontSizeToFitWidth = true
         pageHeadingLabel.textColor = UIColor.black.withAlphaComponent(0.7)
     }
     
