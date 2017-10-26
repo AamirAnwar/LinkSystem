@@ -304,7 +304,7 @@ extension LSLinkListViewController:UITextFieldDelegate {
             
             let item = linkItems[currentItemIndex]
             if textField.text?.caseInsensitiveCompare(item) == .orderedSame {
-                print("Correct answer for \(item) at \(timeCount) seconds")
+//                print("Correct answer for \(item) at \(timeCount) seconds")
                 answerTimestamps[currentItemIndex] = timeCount
                 recallViewController?.currentItem = currentItemIndex + 1
                 UIView.transition(with: textField, duration: 0.2, options: [.transitionCrossDissolve], animations: {
@@ -314,7 +314,7 @@ extension LSLinkListViewController:UITextFieldDelegate {
             
             if currentItemIndex == linkItems.count - 1 {
                 self.timer?.invalidate()
-                print("Total time taken \(timeCount)")
+//                print("Total time taken \(timeCount)")
                 goToStatsPage()
             }
         }

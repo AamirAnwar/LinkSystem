@@ -148,6 +148,7 @@ class LSLinkStartViewController:UIViewController {
     
     @objc func startLink() {
         if let count = Int(itemCountTextField.text!) {
+            guard count < 500 else {return}
             let vc = LSLinkListViewController()
             vc.itemCount = count
             vc.transitioningDelegate = self

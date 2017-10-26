@@ -74,7 +74,7 @@ class LSHomeViewController: UIViewController {
         view.addSubview(pageHeadingLabel)
         pageHeadingLabel.translatesAutoresizingMaskIntoConstraints = false
         pageHeadingLabel.font = LSFonts.PageHeading
-        pageHeadingLabel.text = "Link System"
+        pageHeadingLabel.text = "MemberMore"
         pageHeadingLabel.minimumScaleFactor = 0.4
         pageHeadingLabel.adjustsFontSizeToFitWidth = true
         pageHeadingLabel.textColor = UIColor.black.withAlphaComponent(0.7)
