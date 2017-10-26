@@ -20,7 +20,7 @@ class LSLinkListViewController: UIViewController {
     let linkListCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     var linkItems:[String] = []
     var itemCount:Int = 4
-    
+    var panGesture:UIPanGestureRecognizer!
     var recallViewController:LSRecallViewController?
     var timer:Timer?
     var timeCount:Double = 0.0
@@ -37,6 +37,7 @@ class LSLinkListViewController: UIViewController {
         }
         return [String]()
     }()
+    var animator:TransitionAnimator? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +45,9 @@ class LSLinkListViewController: UIViewController {
         if linkItems.isEmpty {
             loadLinkItems(withCount: itemCount)
         }
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(gesture:)))
+        view.addGestureRecognizer(panGesture)
+        
         instructionHeadingLabel.translatesAutoresizingMaskIntoConstraints = false
         instructionLabel.translatesAutoresizingMaskIntoConstraints = false
         closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -64,17 +68,17 @@ class LSLinkListViewController: UIViewController {
         instructionHeadingLabel.textColor = LSColors.LightGrey
         view.addSubview(instructionHeadingLabel)
         
-        instructionLabel.text = "Link each object to the next one using the link system method."
+        instructionLabel.text = "Remember all the items shown below in order"
         view.addSubview(instructionLabel)
         instructionLabel.textColor = LSColors.LightGrey
         instructionLabel.font = LSFonts.ParagraphBody
         instructionLabel.numberOfLines = 0
         
-        closeButton.titleLabel?.font = LSFonts.iconFontWith(size: 14)
+        closeButton.titleLabel?.font = LSFonts.iconFontWith(size: 16)
         view.addSubview(closeButton)
         closeButton.setTitle(LSFontIcon.closeButtonRounded, for: .normal)
-        closeButton.setTitleColor(UIColor.white, for: .normal)
-        closeButton.backgroundColor = LSColors.DarkGrey
+        closeButton.setTitleColor(LSColors.CustomBlack, for: .normal)
+        closeButton.backgroundColor = UIColor.white
         closeButton.layer.cornerRadius = kCloseButtonSize/2
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         
@@ -114,9 +118,12 @@ class LSLinkListViewController: UIViewController {
     
     func loadLinkItems(withCount count:Int) {
         linkItems.removeAll()
-        for _ in 0..<count {
+        guard itemCount > 0 else {return}
+        while linkItems.count != itemCount {
             let randomIndex = Int(arc4random())%(allItems.count)
-            linkItems += [allItems[randomIndex]]
+            let item = allItems[randomIndex]
+            guard item.isEmpty == false else {continue}
+            linkItems += [item]
         }
     }
     
@@ -125,18 +132,21 @@ class LSLinkListViewController: UIViewController {
             let statVC = LSStatisticsViewController()
             statVC.linkItems = self.linkItems
             var statData = [(title:String,text:String)]()
-            statData += [("Item Recall Ratio - \(NSString(format: "%.2f",Double(recallViewController.bubbleView.currentItem)/Double(linkItems.count) * 100))%", "Item recall ratio is defined as the number of items successfully remembered divided by the total number of items")]
+            statData += [("Item Recall Ratio - \(NSString(format: "%.2f",Double(recallViewController.currentItem)/Double(linkItems.count) * 100))%", "Item recall ratio is defined as the number of items successfully remembered divided by the total number of items")]
             
             statData += [("Total Time - \(NSString(format: "%.2f", timeCount)) seconds", "")]
             
             statData += [("Average time per item - \(NSString(format: "%.2f", getAverageTimePerItem())) seconds","Average time is the total time taken to recall each item  in the link chain divided by the total number of items")]
             statVC.stats = statData
+            statVC.animator = self.animator
+            statVC.transitioningDelegate = self
             present(statVC, animated: true)
         }
     }
     
     func getAverageTimePerItem() -> Double {
         var totalTime:Double = 0
+        var totalItems:Int = 0
         for (i,time) in answerTimestamps.enumerated() {
             guard time > 0.0 else {continue}
             
@@ -144,17 +154,24 @@ class LSLinkListViewController: UIViewController {
             if i > 0 {
                 previousTime = answerTimestamps[i - 1]
             }
+            totalItems += 1
             totalTime += time - previousTime
         }
         
-        return totalTime/Double(linkItems.count)
+        guard totalItems > 0 else {return 0.0}
+        return totalTime/Double(totalItems)
     }
     
     @objc func rightNavButtonTapped() {
         guard recallViewController == nil else {
             goToStatsPage()
+            
+            if recallViewController!.currentItem == linkItems.count {
+                LSHelpers.updateLongestLinkStreak(withSteak: linkItems.count)
+            }
             return
         }
+        LSHelpers.incrementGameCount()
         UIView.transition(with: rightNavButton, duration: 1.0, options: [.transitionCrossDissolve], animations: {
             self.rightNavButton.setTitle("Done", for: .normal)
         })
@@ -207,8 +224,48 @@ class LSLinkListViewController: UIViewController {
         dismiss(animated: true)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    @objc func handlePan(gesture:UIPanGestureRecognizer) {
+        
+        guard recallViewController == nil else {return}
+        
+        guard let superView = view.superview, abs(gesture.translation(in: superView).y) > 0 else {return}
+        
+        switch panGesture.state {
+        case .began:
+            if gesture.translation(in: gesture.view!.superview).y < 0 {
+                goToStatsPage()
+            }
+            else {
+                closeButtonTapped()
+            }
+            
+            self.animator?.handlePan(gesture: gesture)
+        default:
+            self.animator?.handlePan(gesture: gesture)
+        }
+    }
+
+}
+
+extension LSLinkListViewController:UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.animator?.isPresenting = true
+        return self.animator
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.animator?.isPresenting = false
+        return self.animator
+    }
+    
+    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        self.animator?.isPresenting = true
+        return self.animator
+    }
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        self.animator?.isPresenting = false
+        return self.animator
     }
 }
 
@@ -233,22 +290,32 @@ extension LSLinkListViewController:UICollectionViewDelegate, UICollectionViewDat
 }
 
 extension LSLinkListViewController:UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard string != " " else {return false}
+        return true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let currentItemIndex = recallViewController?.bubbleView.currentItem {
-            guard currentItemIndex < linkItems.count else {return false}
+        if let currentItemIndex = recallViewController?.currentItem {
+            guard currentItemIndex < linkItems.count else {
+                return false
+            }
+            
             let item = linkItems[currentItemIndex]
             if textField.text?.caseInsensitiveCompare(item) == .orderedSame {
-                print("Correct answer for \(item) at \(timeCount) seconds")
+//                print("Correct answer for \(item) at \(timeCount) seconds")
                 answerTimestamps[currentItemIndex] = timeCount
-                recallViewController?.bubbleView.next()
-                UIView.transition(with: textField, duration: 0.5, options: [.transitionCrossDissolve], animations: {
+                recallViewController?.currentItem = currentItemIndex + 1
+                UIView.transition(with: textField, duration: 0.2, options: [.transitionCrossDissolve], animations: {
                     textField.text = ""
                 })
             }
             
             if currentItemIndex == linkItems.count - 1 {
                 self.timer?.invalidate()
-                print("Total time taken \(timeCount)")
+//                print("Total time taken \(timeCount)")
+                goToStatsPage()
             }
         }
         return false

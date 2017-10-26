@@ -19,12 +19,13 @@
 		437A742D1F8B5AE8003BEBD8 /* LSColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A742C1F8B5AE8003BEBD8 /* LSColors.swift */; };
 		437A742F1F8B7070003BEBD8 /* LSLinkStartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A742E1F8B7070003BEBD8 /* LSLinkStartViewController.swift */; };
 		437A74311F8B714E003BEBD8 /* LSConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A74301F8B714E003BEBD8 /* LSConstants.swift */; };
+		43879A571F98BBF50066E6E5 /* LSHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43879A561F98BBF50066E6E5 /* LSHelpers.swift */; };
 		43B325651F83EBDC00329ED5 /* LSFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B325641F83EBDC00329ED5 /* LSFonts.swift */; };
 		43CD6FF51F8E2A8E00C7BE0A /* LSLinkListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CD6FF41F8E2A8E00C7BE0A /* LSLinkListViewController.swift */; };
 		43CD6FF61F8E312400C7BE0A /* ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 437A74321F8B8416003BEBD8 /* ionicons.ttf */; };
 		43CD6FF81F8E35B200C7BE0A /* LSLinkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CD6FF71F8E35B200C7BE0A /* LSLinkCollectionViewCell.swift */; };
 		43CD6FFA1F8E3A8F00C7BE0A /* LSRecallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CD6FF91F8E3A8F00C7BE0A /* LSRecallViewController.swift */; };
-		43CD6FFC1F8E3BEB00C7BE0A /* LSLinkBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CD6FFB1F8E3BEB00C7BE0A /* LSLinkBubbleView.swift */; };
+		43E1FE541F91E24900231512 /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E1FE531F91E24900231512 /* TransitionAnimator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,11 +44,12 @@
 		437A742E1F8B7070003BEBD8 /* LSLinkStartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSLinkStartViewController.swift; sourceTree = "<group>"; };
 		437A74301F8B714E003BEBD8 /* LSConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSConstants.swift; sourceTree = "<group>"; };
 		437A74321F8B8416003BEBD8 /* ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ionicons.ttf; sourceTree = "<group>"; };
+		43879A561F98BBF50066E6E5 /* LSHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSHelpers.swift; sourceTree = "<group>"; };
 		43B325641F83EBDC00329ED5 /* LSFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSFonts.swift; sourceTree = "<group>"; };
 		43CD6FF41F8E2A8E00C7BE0A /* LSLinkListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSLinkListViewController.swift; sourceTree = "<group>"; };
 		43CD6FF71F8E35B200C7BE0A /* LSLinkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSLinkCollectionViewCell.swift; sourceTree = "<group>"; };
 		43CD6FF91F8E3A8F00C7BE0A /* LSRecallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSRecallViewController.swift; sourceTree = "<group>"; };
-		43CD6FFB1F8E3BEB00C7BE0A /* LSLinkBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSLinkBubbleView.swift; sourceTree = "<group>"; };
+		43E1FE531F91E24900231512 /* TransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,20 +87,21 @@
 				437A742E1F8B7070003BEBD8 /* LSLinkStartViewController.swift */,
 				43CD6FF41F8E2A8E00C7BE0A /* LSLinkListViewController.swift */,
 				43CD6FF91F8E3A8F00C7BE0A /* LSRecallViewController.swift */,
-				43CD6FFB1F8E3BEB00C7BE0A /* LSLinkBubbleView.swift */,
 				437A74301F8B714E003BEBD8 /* LSConstants.swift */,
 				437A742A1F8B5A15003BEBD8 /* LSSquareBulletView.swift */,
 				43B325641F83EBDC00329ED5 /* LSFonts.swift */,
 				437A742C1F8B5AE8003BEBD8 /* LSColors.swift */,
 				433A0CEE1F8F737F00D92750 /* LSStatisticsViewController.swift */,
 				433A0CF01F8F756400D92750 /* LSStatsTableViewCell.swift */,
+				43E1FE531F91E24900231512 /* TransitionAnimator.swift */,
+				43879A561F98BBF50066E6E5 /* LSHelpers.swift */,
+				43CD6FF71F8E35B200C7BE0A /* LSLinkCollectionViewCell.swift */,
 				433A0CEC1F8F5AF600D92750 /* nounlist.txt */,
 				437A74321F8B8416003BEBD8 /* ionicons.ttf */,
 				4315F7041F82AA4C00360B15 /* Assets.xcassets */,
 				4315F7061F82AA4C00360B15 /* LaunchScreen.storyboard */,
 				4315F7091F82AA4C00360B15 /* Info.plist */,
 				4315F7011F82AA4C00360B15 /* LinkSystem.xcdatamodeld */,
-				43CD6FF71F8E35B200C7BE0A /* LSLinkCollectionViewCell.swift */,
 			);
 			path = LinkSystem;
 			sourceTree = "<group>";
@@ -178,7 +181,7 @@
 			files = (
 				433A0CEF1F8F737F00D92750 /* LSStatisticsViewController.swift in Sources */,
 				43CD6FFA1F8E3A8F00C7BE0A /* LSRecallViewController.swift in Sources */,
-				43CD6FFC1F8E3BEB00C7BE0A /* LSLinkBubbleView.swift in Sources */,
+				43E1FE541F91E24900231512 /* TransitionAnimator.swift in Sources */,
 				437A74311F8B714E003BEBD8 /* LSConstants.swift in Sources */,
 				4315F7031F82AA4C00360B15 /* LinkSystem.xcdatamodeld in Sources */,
 				437A742F1F8B7070003BEBD8 /* LSLinkStartViewController.swift in Sources */,
@@ -187,6 +190,7 @@
 				437A742B1F8B5A15003BEBD8 /* LSSquareBulletView.swift in Sources */,
 				4315F6FD1F82AA4C00360B15 /* LSHomeViewController.swift in Sources */,
 				43CD6FF81F8E35B200C7BE0A /* LSLinkCollectionViewCell.swift in Sources */,
+				43879A571F98BBF50066E6E5 /* LSHelpers.swift in Sources */,
 				437A742D1F8B5AE8003BEBD8 /* LSColors.swift in Sources */,
 				433A0CF11F8F756400D92750 /* LSStatsTableViewCell.swift in Sources */,
 				4315F6FB1F82AA4C00360B15 /* AppDelegate.swift in Sources */,
@@ -322,10 +326,10 @@
 				DEVELOPMENT_TEAM = C3RT9P7X65;
 				INFOPLIST_FILE = LinkSystem/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.aamiranwar.LinkSystem;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aamiranwar.remembermore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -337,10 +341,10 @@
 				DEVELOPMENT_TEAM = C3RT9P7X65;
 				INFOPLIST_FILE = LinkSystem/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.aamiranwar.LinkSystem;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aamiranwar.remembermore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
